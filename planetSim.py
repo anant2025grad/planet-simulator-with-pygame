@@ -3,7 +3,7 @@ import math
 
 pygame.init()
 
-# Fullscreen setup
+# Fullscreen
 WIN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 WIDTH, HEIGHT = WIN.get_size()
 pygame.display.set_caption("Solar System Simulation")
@@ -11,19 +11,21 @@ pygame.display.set_caption("Solar System Simulation")
 class Body:
     AU = 149.6e6 * 1000
     GRAVITY = 6.67428e-11
-    SCALE = 15 / AU   # << adjusted so outer planets fit
-    TIMESTEP = 3600 * 24
 
+    SCALE = 80 / AU   # START ZOOMED INTO INNER PLANETS
+    MIN_SCALE = 5 / AU
+    MAX_SCALE = 200 / AU
+
+    TIMESTEP = 3600 * 24
 
     def __init__(self, x, y, radius, color, mass):
         self.x = x
         self.y = y
-        self.radius = radius
+        self.base_radius = radius  # store original size
         self.color = color
         self.mass = mass
 
         self.sun = False
-        self.distance_to_sun = 0
         self.orbit = []
 
         self.x_vel = 0
@@ -33,36 +35,32 @@ class Body:
         x = self.x * self.SCALE + offset_x
         y = self.y * self.SCALE + offset_y
 
-        # Draw orbit
+        # Draw orbit (limit points for performance)
         if len(self.orbit) > 2:
-            updated_points = []
-            for point in self.orbit:
-                px, py = point
+            points = self.orbit[-800:]  # prevents lag
+            updated = []
+            for px, py in points:
                 px = px * self.SCALE + offset_x
                 py = py * self.SCALE + offset_y
-                updated_points.append((px, py))
+                updated.append((px, py))
 
-            pygame.draw.lines(window, self.color, False, updated_points, 1)
+            pygame.draw.lines(window, self.color, False, updated, 1)
 
-        # Draw planet (scaled radius)
-        draw_radius = max(2, int(self.radius))
+        # SCALE RADIUS WITH ZOOM
+        scale_factor = self.SCALE / (80 / self.AU)
+        draw_radius = max(2, int(self.base_radius * scale_factor))
+
         pygame.draw.circle(window, self.color, (int(x), int(y)), draw_radius)
 
     def attraction(self, other):
-        distance_x = other.x - self.x
-        distance_y = other.y - self.y
-        distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
-
-        if other.sun:
-            self.distance_to_sun = distance
+        dx = other.x - self.x
+        dy = other.y - self.y
+        distance = math.sqrt(dx**2 + dy**2)
 
         force = self.GRAVITY * self.mass * other.mass / distance**2
-        theta = math.atan2(distance_y, distance_x)
+        theta = math.atan2(dy, dx)
 
-        force_x = math.cos(theta) * force
-        force_y = math.sin(theta) * force
-
-        return force_x, force_y
+        return math.cos(theta) * force, math.sin(theta) * force
 
     def update_position(self, planets):
         total_fx = total_fy = 0
@@ -70,7 +68,6 @@ class Body:
         for planet in planets:
             if self == planet:
                 continue
-
             fx, fy = self.attraction(planet)
             total_fx += fx
             total_fy += fy
@@ -85,25 +82,24 @@ class Body:
 
 
 def main():
-    run = True
     clock = pygame.time.Clock()
+    run = True
 
-    # Split screen (left = simulation, right = UI panel)
     SIM_WIDTH = int(WIDTH * 0.7)
     offset_x = SIM_WIDTH // 2
     offset_y = HEIGHT // 2
 
     # Bodies
-    sun = Body(0, 0, 30, (255, 255, 0), 1.98892 * 10**30)
+    sun = Body(0, 0, 20, (255, 255, 0), 1.98892 * 10**30)
     sun.sun = True
 
     mercury = Body((-0.387 * Body.AU), 0, 6, (169, 169, 169), 3.30 * 10**23)
     mercury.y_vel = 47.4 * 1000
 
-    venus = Body((-0.723 * Body.AU), 0, 15, (218, 165, 32), 4.867 * 10**24)
+    venus = Body((-0.723 * Body.AU), 0, 13, (218, 165, 32), 4.867 * 10**24)
     venus.y_vel = 35.02 * 1000
 
-    earth = Body((-1 * Body.AU), 0, 16, (100, 216, 255), 5.9742 * 10**24)
+    earth = Body((-1 * Body.AU), 0, 12, (100, 216, 255), 5.9742 * 10**24)
     earth.y_vel = 29.783 * 1000
 
     mars = Body((-1.524 * Body.AU), 0, 12, (188, 39, 50), 6.39 * 10**23)
@@ -130,22 +126,25 @@ def main():
         clock.tick(120)
         WIN.fill((0, 0, 0))
 
-        # Right-side UI panel (blank for now)
         pygame.draw.rect(WIN, (20, 20, 20), (SIM_WIDTH, 0, WIDTH - SIM_WIDTH, HEIGHT))
+
+        keys = pygame.key.get_pressed()
+
+        # SMOOTH ZOOM + LIMITS
+        if keys[pygame.K_UP]:
+            Body.SCALE *= 1.02
+        if keys[pygame.K_DOWN]:
+            Body.SCALE /= 1.02
+
+        # Clamp zoom
+        Body.SCALE = max(Body.MIN_SCALE, min(Body.MAX_SCALE, Body.SCALE))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
-
-                # Zoom controls
-                if event.key == pygame.K_UP:
-                    Body.SCALE *= 1.1
-                if event.key == pygame.K_DOWN:
-                    Body.SCALE /= 1.1
 
         for planet in planets:
             planet.update_position(planets)
