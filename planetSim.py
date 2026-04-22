@@ -4,7 +4,7 @@ import math
 pygame.init()
 
 # Fullscreen
-WIN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+WIN = pygame.display.set_mode((0, 0), pygame.WINDOWMAXIMIZED)
 WIDTH, HEIGHT = WIN.get_size()
 pygame.display.set_caption("Solar System Simulation")
 
@@ -126,7 +126,20 @@ def main():
         clock.tick(120)
         WIN.fill((0, 0, 0))
 
-        pygame.draw.rect(WIN, (20, 20, 20), (SIM_WIDTH, 0, WIDTH - SIM_WIDTH, HEIGHT))
+        # info panel text
+        info_panel = pygame.draw.rect(WIN, (40, 40, 40), (SIM_WIDTH, 0, WIDTH - SIM_WIDTH, HEIGHT))
+        font = pygame.font.SysFont("Times New Roman", 30, False, False)
+        text_surface = font.render("Solar System Simulator", True, (255, 255, 255))
+
+        # finding center of panel
+        panel_center_x = SIM_WIDTH + (WIDTH - SIM_WIDTH) // 2
+        text_x = panel_center_x - text_surface.get_width() // 2
+
+        WIN.blit(text_surface, (text_x, 20))
+
+
+
+
 
         keys = pygame.key.get_pressed()
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="added all remaining planets to the sim, also added a zoom in/out functionality with arrow keys to make the planets easier to visualize.">
+    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="added smooth zooming, enhanced planet/sun scaling, and limited orbit drawing for lag prevention and performance.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/planetSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/planetSim.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +97,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776865881781</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added smooth zooming, enhanced planet/sun scaling, and limited orbit drawing for lag prevention and performance.">
+      <option name="closed" value="true" />
+      <created>1776866366164</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1776866366164</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -115,6 +124,7 @@
     <MESSAGE value="created sun, earth, and mars bodies. implemented orbit and gravity phyics with the 'attraction' and 'update_position' methods." />
     <MESSAGE value="added toggleable orbit path functionality." />
     <MESSAGE value="added all remaining planets to the sim, also added a zoom in/out functionality with arrow keys to make the planets easier to visualize." />
-    <option name="LAST_COMMIT_MESSAGE" value="added all remaining planets to the sim, also added a zoom in/out functionality with arrow keys to make the planets easier to visualize." />
+    <MESSAGE value="added smooth zooming, enhanced planet/sun scaling, and limited orbit drawing for lag prevention and performance." />
+    <option name="LAST_COMMIT_MESSAGE" value="added smooth zooming, enhanced planet/sun scaling, and limited orbit drawing for lag prevention and performance." />
   </component>
 </project>
