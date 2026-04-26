@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="initial render of planet names in info panel">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/planetSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/planetSim.py" afterDir="false" />
-    </list>
+    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777171178021</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet">
+      <option name="closed" value="true" />
+      <created>1777172960206</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1777172960206</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,6 +157,7 @@
     <MESSAGE value="added initial text to info panel. subject to changes and improvements." />
     <MESSAGE value="added scroll wheel zoom functionality" />
     <MESSAGE value="initial render of planet names in info panel" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial render of planet names in info panel" />
+    <MESSAGE value="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
+    <option name="LAST_COMMIT_MESSAGE" value="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
   </component>
 </project>

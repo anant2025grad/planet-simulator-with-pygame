@@ -122,7 +122,7 @@ def main():
 
     planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
-    # ✅ Create buttons ONCE
+    # Create buttons ONCE
     buttons = []
     y = 80
     for planet in planets:
@@ -182,10 +182,22 @@ def main():
             if selected_planet:
                 screen_x = selected_planet.x * Body.SCALE + offset_x
                 screen_y = selected_planet.y * Body.SCALE + offset_y
-                label_font = pygame.font.SysFont("Times New Roman", 20)
-                label = label_font.render(selected_planet.name, True, (255, 255, 255))
+
+                label_font = pygame.font.SysFont("Arial", 18)
+                label = label_font.render(f"{selected_planet.name} | Mass: {selected_planet.mass:.2e}", True, (255, 255, 255))
+
                 label_x = screen_x - label.get_width() // 2
-                label_y = screen_y - 25  # above the planet
+                label_y = screen_y - 25
+
+                padding = 4
+                bg_rect = pygame.Rect(
+                    label_x - padding,
+                    label_y - padding,
+                    label.get_width() + padding * 2,
+                    label.get_height() + padding * 2
+                )
+
+                pygame.draw.rect(WIN, (20, 20, 20), bg_rect, border_radius=5)
                 WIN.blit(label, (label_x, label_y))
         # PANEL
         panel_surface = pygame.Surface((WIDTH - SIM_WIDTH, HEIGHT), pygame.SRCALPHA)
