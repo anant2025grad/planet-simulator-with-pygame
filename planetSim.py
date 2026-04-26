@@ -13,7 +13,7 @@ class Body:
     GRAVITY = 6.67428e-11
 
     SCALE = 80 / AU   # START ZOOMED INTO INNER PLANETS
-    MIN_SCALE = 5 / AU
+    MIN_SCALE = 15 / AU
     MAX_SCALE = 200 / AU
 
     TIMESTEP = 3600 * 24
@@ -125,32 +125,7 @@ def main():
     while run:
         clock.tick(120)
         WIN.fill((0, 0, 0))
-
-        # info panel text
-        info_panel = pygame.draw.rect(WIN, (40, 40, 40), (SIM_WIDTH, 0, WIDTH - SIM_WIDTH, HEIGHT))
-        font = pygame.font.SysFont("Times New Roman", 30, False, False)
-        text_surface = font.render("Solar System Simulator", True, (255, 255, 255))
-
-        # finding center of panel
-        panel_center_x = SIM_WIDTH + (WIDTH - SIM_WIDTH) // 2
-        text_x = panel_center_x - text_surface.get_width() // 2
-
-        WIN.blit(text_surface, (text_x, 20))
-
-
-
-
-
         keys = pygame.key.get_pressed()
-
-        # SMOOTH ZOOM + LIMITS
-        if keys[pygame.K_UP]:
-            Body.SCALE *= 1.02
-        if keys[pygame.K_DOWN]:
-            Body.SCALE /= 1.02
-
-        # Clamp zoom
-        Body.SCALE = max(Body.MIN_SCALE, min(Body.MAX_SCALE, Body.SCALE))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -158,10 +133,47 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+            if event.type == pygame.MOUSEWHEEL:
+                if event.y > 0:
+                    Body.SCALE *= 1.15
+                elif event.y < 0:
+                    Body.SCALE /= 1.15
+
+        if keys[pygame.K_UP]:
+            Body.SCALE *= 1.02
+        if keys[pygame.K_DOWN]:
+            Body.SCALE /= 1.02
+
+
+
+
+        # Clamp zoom
+        Body.SCALE = max(Body.MIN_SCALE, min(Body.MAX_SCALE, Body.SCALE))
 
         for planet in planets:
             planet.update_position(planets)
             planet.draw(WIN, offset_x, offset_y)
+
+        # Create transparent panel
+        panel_surface = pygame.Surface((WIDTH - SIM_WIDTH, HEIGHT), pygame.SRCALPHA)
+        panel_surface.fill((40, 40, 40, 180))
+
+        # Draw panel
+        WIN.blit(panel_surface, (SIM_WIDTH, 0))
+
+        # Text setup
+        font = pygame.font.SysFont("Times New Roman", 30)
+        text_surface = font.render("Solar System Simulator", True, (255, 255, 255))
+
+        # Center text in panel
+        panel_center_x = SIM_WIDTH + (WIDTH - SIM_WIDTH) // 2
+        text_x = panel_center_x - text_surface.get_width() // 2
+        pygame.draw.line(WIN, (80, 80, 80), (SIM_WIDTH, 0), (SIM_WIDTH, HEIGHT), 2)
+
+        # Draw text
+        WIN.blit(text_surface, (text_x, 20))
+
+
 
         pygame.display.update()
 
