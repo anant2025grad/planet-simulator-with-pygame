@@ -3,7 +3,6 @@ import math
 
 pygame.init()
 
-# Fullscreen
 WIN = pygame.display.set_mode((0, 0), pygame.WINDOWMAXIMIZED)
 WIDTH, HEIGHT = WIN.get_size()
 pygame.display.set_caption("Solar System Simulation")
@@ -12,7 +11,7 @@ class Body:
     AU = 149.6e6 * 1000
     GRAVITY = 6.67428e-11
 
-    SCALE = 80 / AU   # START ZOOMED INTO INNER PLANETS
+    SCALE = 80 / AU
     MIN_SCALE = 15 / AU
     MAX_SCALE = 200 / AU
 
@@ -22,7 +21,7 @@ class Body:
         self.name = name
         self.x = x
         self.y = y
-        self.base_radius = radius  # store original size
+        self.base_radius = radius
         self.color = color
         self.mass = mass
 
@@ -36,9 +35,8 @@ class Body:
         x = self.x * self.SCALE + offset_x
         y = self.y * self.SCALE + offset_y
 
-        # Draw orbit (limit points for performance)
         if len(self.orbit) > 2:
-            points = self.orbit[-800:]  # prevents lag
+            points = self.orbit[-800:]
             updated = []
             for px, py in points:
                 px = px * self.SCALE + offset_x
@@ -47,7 +45,6 @@ class Body:
 
             pygame.draw.lines(window, self.color, False, updated, 1)
 
-        # SCALE RADIUS WITH ZOOM
         scale_factor = self.SCALE / (80 / self.AU)
         draw_radius = max(2, int(self.base_radius * scale_factor))
 
@@ -87,8 +84,10 @@ def main():
     run = True
 
     SIM_WIDTH = int(WIDTH * 0.7)
+
     offset_x = SIM_WIDTH // 2
     offset_y = HEIGHT // 2
+    selected_planet = None
 
     # Bodies
     sun = Body("Sun", 0, 0, 20, (255, 255, 0), 1.98892 * 10**30)
@@ -123,63 +122,88 @@ def main():
 
     planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
+    # ✅ Create buttons ONCE
+    buttons = []
+    y = 80
+    for planet in planets:
+        rect = pygame.Rect(SIM_WIDTH + 20, y, 200, 30)
+        buttons.append({"planet": planet, "rect": rect})
+        y += 40
+
+    font = pygame.font.SysFont("Times New Roman", 24)
+
     while run:
         clock.tick(120)
         WIN.fill((0, 0, 0))
+
         keys = pygame.key.get_pressed()
 
+        # EVENTS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+
             if event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     Body.SCALE *= 1.15
                 elif event.y < 0:
                     Body.SCALE /= 1.15
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                for button in buttons:
+                    if button["rect"].collidepoint(mouse_pos):
+                        selected_planet = button["planet"]
+
         if keys[pygame.K_UP]:
             Body.SCALE *= 1.02
         if keys[pygame.K_DOWN]:
             Body.SCALE /= 1.02
 
-
-
-
-        # Clamp zoom
         Body.SCALE = max(Body.MIN_SCALE, min(Body.MAX_SCALE, Body.SCALE))
 
+        # CAMERA UPDATE BEFORE DRAW
+        if selected_planet:
+            target_x = SIM_WIDTH // 2 - selected_planet.x * Body.SCALE
+            target_y = HEIGHT // 2 - selected_planet.y * Body.SCALE
+
+            # smoothing factor (0.05–0.15 is good)
+            offset_x += (target_x - offset_x) * 0.08
+            offset_y += (target_y - offset_y) * 0.08
+
+        # DRAW PLANETS
         for planet in planets:
             planet.update_position(planets)
             planet.draw(WIN, offset_x, offset_y)
-
-        # Create transparent panel
+            if selected_planet:
+                screen_x = selected_planet.x * Body.SCALE + offset_x
+                screen_y = selected_planet.y * Body.SCALE + offset_y
+                label_font = pygame.font.SysFont("Times New Roman", 20)
+                label = label_font.render(selected_planet.name, True, (255, 255, 255))
+                label_x = screen_x - label.get_width() // 2
+                label_y = screen_y - 25  # above the planet
+                WIN.blit(label, (label_x, label_y))
+        # PANEL
         panel_surface = pygame.Surface((WIDTH - SIM_WIDTH, HEIGHT), pygame.SRCALPHA)
         panel_surface.fill((40, 40, 40, 180))
-
-        # Draw panel
         WIN.blit(panel_surface, (SIM_WIDTH, 0))
 
-        # Text setup
-        font = pygame.font.SysFont("Times New Roman", 30)
-        text_surface = font.render("Solar System Simulator", True, (255, 255, 255))
-
-        # Center text in panel
-        panel_center_x = SIM_WIDTH + (WIDTH - SIM_WIDTH) // 2
-        text_x = panel_center_x - text_surface.get_width() // 2
         pygame.draw.line(WIN, (80, 80, 80), (SIM_WIDTH, 0), (SIM_WIDTH, HEIGHT), 2)
 
-        # Draw text
-        WIN.blit(text_surface, (text_x, 20))
+        # HEADER
+        title_font = pygame.font.SysFont("Times New Roman", 30)
+        title = title_font.render("Solar System Simulator", True, (255, 255, 255))
+        panel_center_x = SIM_WIDTH + (WIDTH - SIM_WIDTH) // 2
+        WIN.blit(title, (panel_center_x - title.get_width() // 2, 20))
 
-        # List of planet names
-        y = 80
-        for planet in planets:
-            text_surface = font.render(planet.name, True, (255, 255, 255))
-            WIN.blit(text_surface, (text_x, y))
-            y += 40
+        # DRAW BUTTON TEXT
+        for button in buttons:
+            label = font.render(button["planet"].name, True, (255, 255, 255))
+            WIN.blit(label, (button["rect"].x, button["rect"].y))
 
         pygame.display.update()
 
