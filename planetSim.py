@@ -18,7 +18,8 @@ class Body:
 
     TIMESTEP = 3600 * 24
 
-    def __init__(self, x, y, radius, color, mass):
+    def __init__(self, name, x, y, radius, color, mass):
+        self.name = name
         self.x = x
         self.y = y
         self.base_radius = radius  # store original size
@@ -90,34 +91,34 @@ def main():
     offset_y = HEIGHT // 2
 
     # Bodies
-    sun = Body(0, 0, 20, (255, 255, 0), 1.98892 * 10**30)
+    sun = Body("Sun", 0, 0, 20, (255, 255, 0), 1.98892 * 10**30)
     sun.sun = True
 
-    mercury = Body((-0.387 * Body.AU), 0, 6, (169, 169, 169), 3.30 * 10**23)
+    mercury = Body("Mercury", (-0.387 * Body.AU), 0, 6, (169, 169, 169), 3.30 * 10**23)
     mercury.y_vel = 47.4 * 1000
 
-    venus = Body((-0.723 * Body.AU), 0, 13, (218, 165, 32), 4.867 * 10**24)
+    venus = Body("Venus", (-0.723 * Body.AU), 0, 13, (218, 165, 32), 4.867 * 10**24)
     venus.y_vel = 35.02 * 1000
 
-    earth = Body((-1 * Body.AU), 0, 12, (100, 216, 255), 5.9742 * 10**24)
+    earth = Body("Earth", (-1 * Body.AU), 0, 12, (100, 216, 255), 5.9742 * 10**24)
     earth.y_vel = 29.783 * 1000
 
-    mars = Body((-1.524 * Body.AU), 0, 12, (188, 39, 50), 6.39 * 10**23)
+    mars = Body("Mars", (-1.524 * Body.AU), 0, 12, (188, 39, 50), 6.39 * 10**23)
     mars.y_vel = 24.077 * 1000
 
-    jupiter = Body((-5.203 * Body.AU), 0, 50, (222, 184, 135), 1.898 * 10**27)
+    jupiter = Body("Jupiter", (-5.203 * Body.AU), 0, 50, (222, 184, 135), 1.898 * 10**27)
     jupiter.y_vel = 13.07 * 1000
 
-    saturn = Body((-9.537 * Body.AU), 0, 50, (210, 180, 140), 5.683 * 10**26)
+    saturn = Body("Saturn", (-9.537 * Body.AU), 0, 50, (210, 180, 140), 5.683 * 10**26)
     saturn.y_vel = 9.68 * 1000
 
-    uranus = Body((-19.191 * Body.AU), 0, 40, (173, 216, 230), 8.681 * 10**25)
+    uranus = Body("Uranus", (-19.191 * Body.AU), 0, 40, (173, 216, 230), 8.681 * 10**25)
     uranus.y_vel = 6.80 * 1000
 
-    neptune = Body((-30.07 * Body.AU), 0, 40, (72, 61, 139), 1.024 * 10**26)
+    neptune = Body("Neptune", (-30.07 * Body.AU), 0, 40, (72, 61, 139), 1.024 * 10**26)
     neptune.y_vel = 5.43 * 1000
 
-    pluto = Body((-39.48 * Body.AU), 0, 3, (190, 190, 190), 1.309 * 10**22)
+    pluto = Body("Pluto", (-39.48 * Body.AU), 0, 3, (190, 190, 190), 1.309 * 10**22)
     pluto.y_vel = 4.74 * 1000
 
     planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
@@ -173,7 +174,12 @@ def main():
         # Draw text
         WIN.blit(text_surface, (text_x, 20))
 
-
+        # List of planet names
+        y = 80
+        for planet in planets:
+            text_surface = font.render(planet.name, True, (255, 255, 255))
+            WIN.blit(text_surface, (text_x, y))
+            y += 40
 
         pygame.display.update()
 
