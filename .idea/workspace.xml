@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
+    <list default="true" id="2016c1bf-28bf-4a46-bfa5-3cd9185d39c9" name="Changes" comment="labels have black background for readability; labels include mass of object">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/planetSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/planetSim.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -134,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777172960206</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="labels have black background for readability; labels include mass of object">
+      <option name="closed" value="true" />
+      <created>1777173139584</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1777173139584</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -158,6 +169,7 @@
     <MESSAGE value="added scroll wheel zoom functionality" />
     <MESSAGE value="initial render of planet names in info panel" />
     <MESSAGE value="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
-    <option name="LAST_COMMIT_MESSAGE" value="added planet buttons and additional features: clicking planet button makes camera follow the movement of the selected planet; added labels that appear over selected planet" />
+    <MESSAGE value="labels have black background for readability; labels include mass of object" />
+    <option name="LAST_COMMIT_MESSAGE" value="labels have black background for readability; labels include mass of object" />
   </component>
 </project>
